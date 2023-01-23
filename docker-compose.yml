@@ -1,0 +1,40 @@
+# docke-compose.yml
+version: "3.3"
+services:
+   db:
+     image: postgres:14.1-alpine
+     restart: unless-stopped
+     container_name: my-dbso
+     hostname: myhost
+     environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: pg1234
+      POSTGRES_DB: proyectoso
+     volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+     ports:
+       - '5433:5432'
+     networks:
+      project_network:
+        aliases:
+          - dbhost
+   backend:
+    container_name: backend
+    build: ./backend
+    ports:
+      - 5000:5000
+    networks:
+      project_network:
+        aliases:
+          - backendhost
+    volumes:
+      - ./backend:/workdir
+    environment:
+      FLASK_DEBUG: "True"
+networks:
+ project_network:
+  name: project_net
+  driver: bridge
+  ipam:
+    driver: default
