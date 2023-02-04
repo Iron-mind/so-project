@@ -19,11 +19,10 @@ try:
     }
     conexion = psycopg2.connect(**credenciales)
     cursor = conexion.cursor()
-    cursor.execute("INSERT INTO counter (id, value) VALUES (1, 1);")
-    row = cursor.fetchone()
-    cursor.execute("SELECT * FROM counter")
-    rows = cursor.fetchall()
-    print(rows)
+    
+    # cursor.execute("SELECT * FROM counter")
+    # rows = cursor.fetchall()
+    # print(rows)
 except psycopg2.Error as e:
     print("Ocurrió un error al conectar a PostgreSQL: ", e)
 
@@ -51,6 +50,9 @@ tasks = [
 
 @app.route('/')
 def index():
+    cursor.execute("select version()")
+    row = cursor.fetchone()
+    print("Conectado a PostgreSQL: ", row)
     return "Hola, World!"
 
 # INICIO codigo comentado 1

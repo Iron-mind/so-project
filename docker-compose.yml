@@ -12,7 +12,7 @@ services:
       POSTGRES_DB: proyectoso
      volumes:
       - ./db/data:/var/lib/postgresql/data
-      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      # - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
      ports:
        - '5433:5432'
      networks:
