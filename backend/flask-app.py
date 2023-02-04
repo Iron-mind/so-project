@@ -1,6 +1,34 @@
 #!/usr/bin/python
 from flask import Flask, jsonify, abort, make_response, request
-import 'lib/db.py' 
+
+"""
+    Conexión a PostgreSQL con Python
+    Ejemplo de CRUD evitando inyecciones SQL
+
+"""
+
+import psycopg2
+cursor = None
+try:
+    credenciales = {
+        "dbname": "proyectoso",
+        "user": "admin",
+        "password": "pg1234",
+        "host": "dbhost",
+        "port": 5432
+    }
+    conexion = psycopg2.connect(**credenciales)
+    cursor = conexion.cursor()
+    cursor.execute("INSERT INTO counter (id, value) VALUES (1, 1);")
+    row = cursor.fetchone()
+    cursor.execute("SELECT * FROM counter")
+    rows = cursor.fetchall()
+    print(rows)
+except psycopg2.Error as e:
+    print("Ocurrió un error al conectar a PostgreSQL: ", e)
+
+# cursor = conexion.cursor()
+
 app = Flask(__name__)
 # INICIO codigo comentado 1
 '''
