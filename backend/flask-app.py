@@ -8,51 +8,44 @@ from flask import Flask, jsonify, abort, make_response, request
 """
 
 import psycopg2
-cursor = None
+conexion = None
 try:
     credenciales = {
         "dbname": "proyectoso",
         "user": "admin",
         "password": "pg1234",
-        "host": "dbhost",
+        "host": "myhost",
         "port": 5432
     }
     conexion = psycopg2.connect(**credenciales)
+    conexion.autocommit = True
     cursor = conexion.cursor()
+    cursor.execute("SELECT version()")
+    row = cursor.fetchone()
+    print("Conectado a Postgre: ", row)
+    cursor.execute("CREATE TABLE IF NOT EXISTS counter (id INTEGER PRIMARY KEY, count INTEGER)")
     
-    # cursor.execute("SELECT * FROM counter")
-    # rows = cursor.fetchall()
-    # print(rows)
+    # # cursor.fetchone()
+    # # cursor.execute("SELECT * FROM counter")
+    # rows = cursor.fetchone()
+    # print("rowsx",rows)
+    cursor.close()
+
 except psycopg2.Error as e:
+  
     print("Ocurrió un error al conectar a PostgreSQL: ", e)
 
 # cursor = conexion.cursor()
 
 app = Flask(__name__)
-# INICIO codigo comentado 1
-'''
-tasks = [
- {
-  'id': 1,
-  'title': "Buy groceries",
-  'description': "Milk, cheese, pizaa",
-  'done': False
- },
- {
-  'id': 2,
-  'title': "Learn Python",
-  'description': "Need a good tutorial on the web",
-  'done': False
- }
-]
-'''
+# INICIO codigo comentado 
 # FIN - codigo comentado 1
 
 @app.route('/')
 def index():
-    cursor.execute("select version()")
-    row = cursor.fetchone()
-    print("Conectado a PostgreSQL: ", row)
+    cursor = conexion.cursor()
+    cursor.execute("INSERT INTO counter (id, count) VALUES (1, 1)")
+    cursor.close()
     return "Hola, World!"
 
 # INICIO codigo comentado 1
