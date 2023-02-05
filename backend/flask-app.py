@@ -36,7 +36,7 @@ app = Flask(__name__)
 @app.route('/counter')
 def index():
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM counter")
+    cursor.execute("SELECT * FROM counter where id=1")
     rows = cursor.fetchall()
     cursor.close()
     print(rows)
