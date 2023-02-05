@@ -41,12 +41,14 @@ app = Flask(__name__)
 # INICIO codigo comentado 
 # FIN - codigo comentado 1
 
-@app.route('/')
+@app.route('/counter')
 def index():
     cursor = conexion.cursor()
-    cursor.execute("INSERT INTO counter (id, count) VALUES (1, 1)")
+    cursor.execute("SELECT * FROM counter")
+    rows = cursor.fetchall()
     cursor.close()
-    return "Hola, World!"
+    print(rows)
+    return jsonify({'counter': rows[0][1]})
 
 # INICIO codigo comentado 1
 # Se habilita un endpoint para devolver todas las tareas almacenadas en la 
