@@ -23,7 +23,7 @@ try:
     cursor.execute("SELECT version()")
     row = cursor.fetchone()
     print("Conectado a Postgre: ", row)
-    cursor.execute("CREATE TABLE IF NOT EXISTS counter (id INTEGER PRIMARY KEY, count INTEGER)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS counter (id INTEGER PRIMARY KEY, count INTEGER); INSERT INTO counter (id, count) VALUES (1, 0) ON CONFLICT DO NOTHING;")
     cursor.close()
 
 except psycopg2.Error as e:
@@ -43,7 +43,7 @@ def index():
     rows = cursor.fetchall()
     cursor.close()
     print(rows)
-    return jsonify({'counter': rows[0][1]})
+    return jsonify({'counter': rows})
 
 @app.route('/counter', methods=['POST'])
 def create_task():
