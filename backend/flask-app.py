@@ -47,7 +47,7 @@ def index():
 
 @app.route('/counter', methods=['POST'])
 def create_count():
-  if not request.json :
+    if not request.json :
         abort(400)
     count = request.json['count']
     cursor = conexion.cursor()
