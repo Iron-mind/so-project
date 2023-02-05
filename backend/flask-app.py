@@ -3,7 +3,6 @@ from flask import Flask, jsonify, abort, make_response, request
 
 """
     Conexión a PostgreSQL con Python
-    Ejemplo de CRUD evitando inyecciones SQL
 
 """
 
@@ -26,11 +25,9 @@ try:
     cursor.execute("CREATE TABLE IF NOT EXISTS counter (id INTEGER PRIMARY KEY, count INTEGER); INSERT INTO counter (id, count) VALUES (1, 0) ON CONFLICT DO NOTHING;")
     cursor.close()
 
-except psycopg2.Error as e:
-  
+except psycopg2.Error as e:  
     print("Ocurrió un error al conectar a PostgreSQL: ", e)
 
-# cursor = conexion.cursor()
 
 app = Flask(__name__)
 # INICIO codigo comentado 
@@ -65,6 +62,14 @@ def update_counter():
     cursor.execute("UPDATE counter SET count = %s WHERE id = 1", (count,))
     cursor.close()
     return jsonify({'response': "OK"})
+
+@app.route('/counter/<int:counter_id>', methods=['DELETE'])
+def delete_task(counter_id):
+    cursor = conexion.cursor()
+    cursor.execute("UPDATE counter SET count = 0 WHERE id = 1")
+    cursor.close()
+    return jsonify({'result': "reset successful"})
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)
