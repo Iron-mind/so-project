@@ -24,11 +24,6 @@ try:
     row = cursor.fetchone()
     print("Conectado a Postgre: ", row)
     cursor.execute("CREATE TABLE IF NOT EXISTS counter (id INTEGER PRIMARY KEY, count INTEGER)")
-    
-    # # cursor.fetchone()
-    # # cursor.execute("SELECT * FROM counter")
-    # rows = cursor.fetchone()
-    # print("rowsx",rows)
     cursor.close()
 
 except psycopg2.Error as e:
@@ -50,58 +45,17 @@ def index():
     print(rows)
     return jsonify({'counter': rows[0][1]})
 
-# INICIO codigo comentado 1
-# Se habilita un endpoint para devolver todas las tareas almacenadas en la 
-# variables 'tasks'
-#
-'''
-@app.route('/todo/api/v1.0/tasks', methods=['GET'])
-def get_tasks():
- return jsonify({'tasks': tasks})
-'''
-# FIN - codigo comentado 1
-
-# INICIO - codigo comentado 2
-# Permite recuperar una tarea dado un 'task_id'
-#
-'''
-@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
-def get_task(task_id):
- task = [task for task in tasks if task['id'] == task_id]
- if len(task) == 0:
-  abort(404)
- return jsonify({'task': task[0]})
-'''
-# FIN - codigo comentado 2
-
-# INICIO - codigo comentado 3
-# Una forma de personalizar los errores arrojados por la aplicacion
-#
-'''
-@app.errorhandler(404)
-def not_found(error):
- return make_response(jsonify({'error': 'Not found'}), 404)
-'''
-# FIN - codigo comentado 3
-
-# INICIO - codigo comentado 4
-# Endpoint que permite la creacion de una nueva tarea a traves de la linea de
-# comandos.
-#
-'''
-@app.route('/todo/api/v1.0/tasks', methods=['POST'])
+@app.route('/counter', methods=['POST'])
 def create_task():
- if not request.json or not 'title' in request.json:
+ if not request.json :
   abort(400)
- task = {
-  'id': tasks[-1]['id'] + 1,
-  'title': request.json['title'],
-  'description': request.json.get('description', ""),
-  'done': False
- }
- tasks.append(task)
- return jsonify({'task': task}), 201
-'''
+ count = request.json['count']
+ cursor = conexion.cursor()
+ cursor.execute("INSERT INTO counter (id, count) VALUES (1, %s)", (count,))
+ res = cursor.fetchone()
+ cursor.close()
+ return jsonify({'response': res}), 201
+
 # FIN - codigo comentado 4
 
 # INICIO - codigo comentado 5

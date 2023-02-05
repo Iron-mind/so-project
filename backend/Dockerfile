@@ -7,5 +7,5 @@ COPY requirements.txt requirements.txt
 RUN apk add python3-dev libpq-dev
 RUN pip3 install -r requirements.txt
 EXPOSE 5000
-#COPY . .
+COPY . .
 CMD ["flask", "run"]
