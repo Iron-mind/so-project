@@ -30,8 +30,6 @@ except psycopg2.Error as e:
 
 
 app = Flask(__name__)
-# INICIO codigo comentado 
-# FIN - codigo comentado 1
 
 @app.route('/counter')
 def index():
@@ -40,7 +38,7 @@ def index():
     rows = cursor.fetchall()
     cursor.close()
     print(rows)
-    return jsonify({'counter': rows})
+    return jsonify({'counter': rows[0][1]})
 
 @app.route('/counter', methods=['POST'])
 def create_count():
